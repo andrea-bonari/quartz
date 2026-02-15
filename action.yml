@@ -1,0 +1,58 @@
+name: Quartz Deploy to Pages
+
+description: Build Quartz with a content repo and upload a GitHub Pages artifact.
+
+inputs:
+  site_title:
+    description: "Site title passed to setup.sh"
+    required: true
+  site_slug:
+    description: "Base slug passed to setup.sh (e.g., owner.github.io/repo)"
+    required: true
+  site_url:
+    description: "Repo URL passed to setup.sh"
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: Checkout Quartz
+      uses: actions/checkout@v6
+      with:
+        repository: ${{ github.action_repository }}
+        ref: ${{ github.action_ref }}
+        fetch-depth: 0
+        path: quartz
+
+    - name: Checkout content
+      uses: actions/checkout@v6
+      with:
+        repository: ${{ github.repository }}
+        ref: ${{ github.ref }}
+        fetch-depth: 0
+        path: quartz/content
+
+    - name: Setup Node
+      uses: actions/setup-node@v6
+      with:
+        node-version: 22
+
+    - name: Run Quartz setup
+      shell: bash
+      working-directory: quartz
+      run: chmod +x ./setup.sh && ./setup.sh "${{ inputs.site_title }}" "${{ inputs.site_slug }}" "${{ inputs.site_url }}"
+
+    - name: Install dependencies
+      shell: bash
+      working-directory: quartz
+      run: npm ci
+
+    - name: Build Quartz
+      shell: bash
+      working-directory: quartz
+      run: npx quartz build
+
+    - name: Upload artifact
+      uses: actions/upload-pages-artifact@v3
+      with:
+        path: quartz/public
