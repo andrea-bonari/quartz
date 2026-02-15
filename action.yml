@@ -39,20 +39,20 @@ runs:
 
     - name: Run Quartz setup
       shell: bash
-      working-directory: quartz
+      working-directory: ${{ github.action_path }}/quartz
       run: chmod +x ./setup.sh && ./setup.sh "${{ inputs.site_title }}" "${{ inputs.site_slug }}" "${{ inputs.site_url }}"
 
     - name: Install dependencies
       shell: bash
-      working-directory: quartz
+      working-directory: ${{ github.action_path }}/quartz
       run: npm ci
 
     - name: Build Quartz
       shell: bash
-      working-directory: quartz
+      working-directory: ${{ github.action_path }}/quartz
       run: npx quartz build
 
     - name: Upload artifact
       uses: actions/upload-pages-artifact@v3
       with:
-        path: quartz/public
+        path: ${{ github.action_path }}/quartz/public
