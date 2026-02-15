@@ -19,14 +19,10 @@ runs:
     - name: Checkout Quartz
       uses: actions/checkout@v6
       with:
-        repository: ${{ github.action_repository }}
-        ref: ${{ github.action_ref }}
+        repository: andrea-bonari/quartz
+        ref: v4
         fetch-depth: 0
         path: quartz
-
-    - name: Debug workspace
-      shell: bash
-      run: pwd && ls -la && ls -la quartz
 
     - name: Checkout content
       uses: actions/checkout@v6
