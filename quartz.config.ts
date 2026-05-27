@@ -69,10 +69,7 @@ const config: QuartzConfig = {
       Plugin.CrawlLinks({ markdownLinkResolution: "shortest" }),
       Plugin.Description(),
       Plugin.Latex({
-        renderEngine: "katex",
-        customMacros: {
-          "\\centernot": "\\not#1",
-        },
+        renderEngine: "mathjax",
       }),
       Plugin.MathBlockFixer(),
     ],
